@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "marsrobots": {
+      "commandName": "Project",
+      "commandLineArgs": "..\\..\\..\\sampleinput.txt"
+    }
+  }
+}
