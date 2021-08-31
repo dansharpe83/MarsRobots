@@ -4,16 +4,18 @@ namespace MarsRobots.Core
 {
     public class Grid
     {
+        private Guid _id;
         private bool[,] _grid;
-        public Grid(int maxWidth, int maxHeight)
+        public Grid(Guid id, int width, int height)
         {
-            if (maxWidth > 50)
-                throw new ArgumentException($"{nameof(maxWidth)} must not be greater than 50");
+            if (width > 50)
+                throw new ArgumentException($"{nameof(width)} must not be greater than 50");
 
-            if (maxHeight > 50)
-                throw new ArgumentException($"{nameof(maxHeight)} must not be greater than 50");
+            if (height > 50)
+                throw new ArgumentException($"{nameof(height)} must not be greater than 50");
 
-            _grid = new bool[maxWidth+1, maxHeight+1];
+            _id = id;
+            _grid = new bool[width+1, height+1];
         }
 
         public bool GridCoordinateHasScent(int x, int y)

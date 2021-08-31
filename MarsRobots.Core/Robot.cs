@@ -8,13 +8,26 @@ namespace MarsRobots.Core
 {
     public class Robot
     {
-        private readonly Grid _grid;
-
         private List<Position> _history = new List<Position>();
         private Position _currentPosition;
         private bool _isLost;
+        public string Instructions { get; private set; }
 
-        public Robot(Position initialPosition, Grid grid)
+        public Robot(Guid id, int x, int y, Orientation orientation, string instructions)
+        {
+            if (instructions.Length > 100)
+                throw new ArgumentException($"{nameof(instructions)} must not be greater than 100 characters");
+
+            var initialPosition = new Position(x, y, orientation);
+            _currentPosition = initialPosition;
+            _history.Add(initialPosition);
+            Instructions = instructions;
+        }
+
+        public Position CurrentPosition => _currentPosition;
+        public bool IsLost => _isLost;
+
+        public void Move(Grid grid)
         {
             if (grid is null)
             {
@@ -22,31 +35,17 @@ namespace MarsRobots.Core
             }
 
             //check that the initial position is in bounds of our grid
-            if (grid.IsCoordinateOutOfBounds(initialPosition.X, initialPosition.Y))
+            if (grid.IsCoordinateOutOfBounds(_currentPosition.X, CurrentPosition.Y))
                 throw new ArgumentException("Initial position is not with in the grid");
-            
 
-            _currentPosition = initialPosition ?? throw new ArgumentNullException(nameof(initialPosition));
-            _history.Add(initialPosition);
-            _grid = grid;
-        }
-
-        public Position CurrentPosition => _currentPosition;
-        public bool IsLost => _isLost;
-
-        public void Instruct(string instructions)
-        {
-            if (instructions.Length > 100)
-                throw new ArgumentException($"{nameof(instructions)} must not be greater than 100 characters");
-
-            foreach(var instruction in instructions)
+            foreach (var instruction in Instructions)
             {
                 //do we break or skip if its lost????
                 switch(instruction)
                 {
                     case 'L': RotateLeft(); break;
                     case 'R': RotateRight(); break;
-                    case 'F': MoveForward(); break;
+                    case 'F': MoveForward(grid); break;
                 }
             }
         }
@@ -81,7 +80,7 @@ namespace MarsRobots.Core
             return position;
         }
 
-        private Position MoveForward()
+        private Position MoveForward(Grid grid)
         {
             //work out the next co-ordinates based on the orientation
             var x = _currentPosition.X;
@@ -95,12 +94,12 @@ namespace MarsRobots.Core
             }
 
             //check if it will take the robot out of bounds
-            if(_grid.IsCoordinateOutOfBounds(x,y))
+            if(grid.IsCoordinateOutOfBounds(x,y))
             {
-                if (_grid.GridCoordinateHasScent(_currentPosition.X, _currentPosition.Y))
+                if (grid.GridCoordinateHasScent(_currentPosition.X, _currentPosition.Y))
                     return _currentPosition;
 
-                _grid.AddScentToCoordinate(_currentPosition.X, _currentPosition.Y);
+                grid.AddScentToCoordinate(_currentPosition.X, _currentPosition.Y);
                 _isLost = true;
 
                 return _currentPosition;

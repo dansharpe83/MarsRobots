@@ -9,7 +9,7 @@ namespace MarsRobots.Tests
         [Fact]
         public void GridSizeCorrect()
         {
-            var grid = new Grid(3, 3);
+            var grid = new Grid(Guid.NewGuid(), 3, 3);
 
             Assert.True(grid.IsCoordinateOutOfBounds(3, 4));
         }
@@ -17,13 +17,13 @@ namespace MarsRobots.Tests
         [Fact]
         public void XTooBigRaisesException()
         {
-            Assert.Throws<ArgumentException>(() => new Grid(60, 10));
+            Assert.Throws<ArgumentException>(() => new Grid(Guid.NewGuid(), 60, 10));
         }
 
         [Fact]
         public void YTooBigRaisesException()
         {
-            Assert.Throws<ArgumentException>(() => new Grid(10, 60));
+            Assert.Throws<ArgumentException>(() => new Grid(Guid.NewGuid(), 10, 60));
         }
 
         [Theory]
@@ -33,14 +33,14 @@ namespace MarsRobots.Tests
         [InlineData(5,3)]
         public void OutOfBoundsCheckWorks(int x, int y)
         {
-            var grid = new Grid(3, 3);
+            var grid = new Grid(Guid.NewGuid(), 3, 3);
             Assert.True(grid.IsCoordinateOutOfBounds(x, y));
         }
 
         [Fact]
         public void SetScentWorks()
         {
-            var grid = new Grid(3, 3);
+            var grid = new Grid(Guid.NewGuid(), 3, 3);
 
             grid.AddScentToCoordinate(1, 1);
 
@@ -50,7 +50,7 @@ namespace MarsRobots.Tests
         [Fact]
         public void SetScentReturnsFalse()
         {
-            var grid = new Grid(3, 3);
+            var grid = new Grid(Guid.NewGuid(), 3, 3);
             Assert.False(grid.GridCoordinateHasScent(1, 1));
         }
     }
