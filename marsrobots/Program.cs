@@ -13,13 +13,12 @@ namespace marsrobots
                 var config = GetConfiguration(args[0]);
 
                 //now we can process them
-                var grid = new Grid(config.GridWidth, config.GridHeight);
+                var grid = new Grid(Guid.NewGuid(), config.GridWidth, config.GridHeight);
                 foreach (var rc in config.RobotConfigurations)
                 {
-                    var position = new Position(rc.X, rc.Y, rc.Orientation);
-                    var robot = new Robot(position, grid);
+                    var robot = new Robot(Guid.NewGuid(), rc.X, rc.Y, rc.Orientation, rc.Instructions);
 
-                    robot.Instruct(rc.Instructions);
+                    robot.Move(grid);
 
                     Console.WriteLine(robot.ToString());
                 }
